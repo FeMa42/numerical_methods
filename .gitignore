@@ -1,0 +1,13 @@
+# Compiled source #
+###################
+__pycache__/
+_build/
+
+# IDE project files #
+####################
+.idea/workspace.xml
+.idea/tasks.xml
+.idea
+.vscode/settings.json
+.vscode/*
+.dccache

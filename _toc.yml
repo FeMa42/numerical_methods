@@ -1,0 +1,16 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+chapters:
+- file: 01-TaylorApproximation/Taylor
+- file: 02-RootFinding/RootFinding
+- file: 03-Derivatives/Derivatives
+- file: 04-LinearEquations/LinearEquations
+- file: 05-RootFindingMultipleVariables/RootFindingMultipleVariables
+- file: 06-LeastSquares/LeastSquares
+- file: 07-NeuralNetworks/NeuralNetworks
+- file: 08-DifferentialEquations/OrdinaryDifferentialEquations
+- file: 09-PrincipalComponentAnalysis/SingularValueDecomposition
+- file: 09-PrincipalComponentAnalysis/IntroducingPCA
