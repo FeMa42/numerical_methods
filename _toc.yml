@@ -12,5 +12,7 @@ chapters:
 - file: 06-LeastSquares/LeastSquares
 - file: 07-NeuralNetworks/NeuralNetworks
 - file: 08-DifferentialEquations/OrdinaryDifferentialEquations
+- file: 08-DifferentialEquations/DirectionFields
+- file: 08-DifferentialEquations/NumericallySolvingODEs
 - file: 09-PrincipalComponentAnalysis/SingularValueDecomposition
 - file: 09-PrincipalComponentAnalysis/IntroducingPCA
