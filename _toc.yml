@@ -4,15 +4,41 @@
 format: jb-book
 root: intro
 chapters:
-- file: 01-TaylorApproximation/Taylor
-- file: 02-RootFinding/RootFinding
-- file: 03-Derivatives/Derivatives
-- file: 04-LinearEquations/LinearEquations
-- file: 05-RootFindingMultipleVariables/RootFindingMultipleVariables
-- file: 06-LeastSquares/LeastSquares
-- file: 07-NeuralNetworks/NeuralNetworks
-- file: 08-DifferentialEquations/OrdinaryDifferentialEquations
-- file: 08-DifferentialEquations/DirectionFields
-- file: 08-DifferentialEquations/NumericallySolvingODEs
+- file: 01-TaylorApproximation/TaylorHeader
+  sections:
+  - file: 01-TaylorApproximation/Taylor
+- file: 02-RootFinding/RootFindingHeader
+  sections:
+  - file: 02-RootFinding/BisectionMethod
+  - file: 02-RootFinding/NewtonMethod
+- file: 03-Derivatives/00DerivativesHeader
+  sections:
+  - file: 03-Derivatives/01IntroductionToDerivatives
+  - file: 03-Derivatives/02ComputingDerivativesofFunctions
+- file: 04-LinearEquations/LinearEquationsHeader
+  sections:
+  - file: 04-LinearEquations/LinearEquations
+  - file: 04-LinearEquations/Conditioning
+  - file: 04-LinearEquations/GaussianElimination
+  - file: 04-LinearEquations/LUFactorisation
+- file: 05-RootFindingMultipleVariables/RootFindingMultiVarHeader
+  sections:
+  - file: 05-RootFindingMultipleVariables/DefinintTheRootFindingProblem
+  - file: 05-RootFindingMultipleVariables/RootFindingMultipleVariables
+- file: 06-LeastSquares/LeastSquaresHeader
+  sections:
+  - file: 06-LeastSquares/LeastSquares
+- file: 07-NeuralNetworks/NeuralNetworksHeader
+  sections:
+  - file: 07-NeuralNetworks/NeuralNetworks
+- file: 08-DifferentialEquations/00OrdinaryDifferentialEquations 
+  sections:
+  - file: 08-DifferentialEquations/01IntroductiontoODEs
+  - file: 08-DifferentialEquations/02DirectionFields
+  - file: 08-DifferentialEquations/03NumericallySolvingODEsEuler
+  - file: 08-DifferentialEquations/04StabilityAndStiffness
+  - file: 08-DifferentialEquations/05HigherOrderSolvers
 - file: 09-PrincipalComponentAnalysis/SingularValueDecomposition
-- file: 09-PrincipalComponentAnalysis/IntroducingPCA
+  sections:
+  - file: 09-PrincipalComponentAnalysis/IntroductionToSVD
+  - file: 09-PrincipalComponentAnalysis/IntroducingPCA

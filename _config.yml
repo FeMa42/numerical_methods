@@ -1,8 +1,9 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: Introduction to Diffusion Models
+title: Numerical Methods for Engineers
 author: Damian Boborzi
+logo: AuxMe_300.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html

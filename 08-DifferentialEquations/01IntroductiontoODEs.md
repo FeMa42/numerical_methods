@@ -1,4 +1,5 @@
-# Ordinary Differential Equations (ODEs)
+(Introduction-to-ODEs)=
+# 8.1. Introduction to ODEs
 
 *Ordinary Differential Equations (ODEs)* are a fundamental concept in mathematics and engineering, used to model systems that change over time. An ODE is an equation that contains a function of one independent variable and its derivatives. 
 
@@ -11,7 +12,7 @@ $$
 \dot{x}=\frac{dx}{dt} = f(t, x), \hspace{1cm} x(t_0)=x_0
 $$
 
-where $x$ is the dependent variable, $t$ is the independent variable, and $f(t, x)$ is a function that describes the rate of change of $x$ with respect to $t$. The solution to this equation is a function $x(t)$ that satisfies the equation. 
+where $x$ is the dependent variable, $t$ is the independent variable, and $f(t, x)$ is a function that describes the rate of change of $x$ with respect to $t$. The function $f$ is called the right-hand side (RHS) of the ODE. If we can describe the ODE with $\dot{x} = f(t,x) = g(t) + u h(t)$, the ODE is linear, otherwise it is non-linear. The solution to this equation is a function $x(t)$ that satisfies the equation. 
 
 > Note that we use the notation $\dot{x}$ to denote the derivative of $x$ with respect to $t$, which is often used if $t$ is meant to be time. The notation $x'$ is also more common, if the independent variable is not time.
 
@@ -75,4 +76,3 @@ $$
 $$
 
 PDEs also have important engineering applications. For example if we want to model the heat distribution in a room which depends on the position in the room and on time. They are more difficult to solve than ODEs and we will not discuss them further here. 
-
