@@ -1,0 +1,888 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>4.1 Linear Algebra in Julia &#8212; Numerical Methods for Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '04-LinearEquations/LinearEquations';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4.2 Conditioning of linear equations" href="Conditioning.html" />
+    <link rel="prev" title="4. Linear Equations" href="LinearEquationsHeader.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/AuxMe_300.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/AuxMe_300.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction to Numerical Methods for Engineers
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../01-TaylorApproximation/TaylorHeader.html">1. Taylor Approximation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../01-TaylorApproximation/Taylor.html">Taylor Series</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../02-RootFinding/RootFindingHeader.html">2. Root Finding</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../02-RootFinding/BisectionMethod.html">2.1 Bisection Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02-RootFinding/NewtonMethod.html">2.2 Newton’s Method</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../03-Derivatives/00DerivativesHeader.html">3. Derivatives</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../03-Derivatives/01IntroductionToDerivatives.html">3.1 Introduction to Derivatives of a function with multiple variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-Derivatives/02ComputingDerivativesofFunctions.html">3.2 Computing Derivatives of Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="LinearEquationsHeader.html">4. Linear Equations</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">4.1 Linear Algebra in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Conditioning.html">4.2 Conditioning of linear equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GaussianElimination.html">4.3 Gaussian Elimination</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LUFactorisation.html">4.4 LU Factorization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../05-RootFindingMultipleVariables/RootFindingMultiVarHeader.html">5. Root Finding with Multiple Variables</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../05-RootFindingMultipleVariables/DefinintTheRootFindingProblem.html">5.1 Defining the Root Finding  Prblem with Multiple Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../05-RootFindingMultipleVariables/RootFindingMultipleVariables.html">5.2 Newton Method with multiple variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../06-LeastSquares/LeastSquaresHeader.html">6. Least Squares</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../06-LeastSquares/LeastSquares.html">6.1 Linear Least Squares Tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../07-NeuralNetworks/NeuralNetworksHeader.html">7. Introduction to Neural Networks</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../07-NeuralNetworks/NeuralNetworks.html">7.1 Predicting currents in the Openmanipulator joints with a neural network</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../08-DifferentialEquations/00OrdinaryDifferentialEquations.html">8. Ordinary Differential Equations (ODEs)</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/01IntroductiontoODEs.html">8.1. Introduction to ODEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/02DirectionFields.html">8.2. Understanding Ordinary Differential Equations - Direction Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/03NumericallySolvingODEsEuler.html">8.3. Introduction to Numerically solving Ordinary Differential Equations - Euler Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/04StabilityAndStiffness.html">8.4. Stability and Stiffness of Numerical Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/05HigherOrderSolvers.html">8.5. Higher Order Methods to solve ODEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../09-PrincipalComponentAnalysis/SingularValueDecomposition.html">9. Singular Value Decomposition (SVD)</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../09-PrincipalComponentAnalysis/IntroductionToSVD.html">9.1 Quick Overview of the Definition of SVD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../09-PrincipalComponentAnalysis/IntroducingPCA.html">9.2 Introduction to Principal Component Analysis (PCA)</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/FeMa42/numerical_methods" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/FeMa42/numerical_methods/issues/new?title=Issue%20on%20page%20%2F04-LinearEquations/LinearEquations.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/04-LinearEquations/LinearEquations.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>4.1 Linear Algebra in Julia</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transposition">Transposition</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transposed-multiplication">Transposed multiplication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-algebra-package">Linear algebra package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-equation-solver-in-julia">Linear Equation solver in Julia</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#norm-of-a-vector">Norm of a vector</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-norms">Matrix norms</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="tex2jax_ignore mathjax_ignore section" id="linear-algebra-in-julia">
+<span id="id1"></span><h1>4.1 Linear Algebra in Julia<a class="headerlink" href="#linear-algebra-in-julia" title="Permalink to this heading">#</a></h1>
+<p>First we need to learn how to do linear algebra in Julia. In the first exercise we learned how to generate and manipulate vectors and matrices. We will now learn how to do linear algebra with these objects.</p>
+<div class="section" id="transposition">
+<h2>Transposition<a class="headerlink" href="#transposition" title="Permalink to this heading">#</a></h2>
+<p>As in other languages <code class="docutils literal notranslate"><span class="pre">A'</span></code> is the conjugate transpose, or adjoint</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="n">Pkg</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">instantiate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3×3 Matrix{Int64}:
+ 1  2   3
+ 4  5   6
+ 7  8  10
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3×3 adjoint(::Matrix{Int64}) with eltype Int64:
+ 1  4   7
+ 2  5   8
+ 3  6  10
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">transpose</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3×3 transpose(::Matrix{Int64}) with eltype Int64:
+ 1  4   7
+ 2  5   8
+ 3  6  10
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="transposed-multiplication">
+<h3>Transposed multiplication<a class="headerlink" href="#transposed-multiplication" title="Permalink to this heading">#</a></h3>
+<p>Julia allows us to write this without *</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="o">&#39;</span><span class="n">A</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3×3 Matrix{Int64}:
+ 66   78   97
+ 78   93  116
+ 97  116  145
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that you can also use <code class="docutils literal notranslate"><span class="pre">A\b</span></code> to solve the linear equation even if <code class="docutils literal notranslate"><span class="pre">A</span></code> is not square. <code class="docutils literal notranslate"><span class="pre">A\b</span></code> gives us the <em>least squares solution</em> if we have an overdetermined linear system (a “tall” matrix). If we have an underdetermined linear system (a “short” matrix) <code class="docutils literal notranslate"><span class="pre">A\b</span></code> gives us the minimum norm solution.</p>
+</div>
+</div>
+<div class="section" id="linear-algebra-package">
+<h2>Linear algebra package<a class="headerlink" href="#linear-algebra-package" title="Permalink to this heading">#</a></h2>
+<p>Julia has a built in package for linear algebra called <code class="docutils literal notranslate"><span class="pre">LinearAlgebra</span></code>. This package contains a lot of useful functions for linear algebra. Let’s look at some of them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">LinearAlgebra</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Computing the dot product of two vectors is done using the <code class="docutils literal notranslate"><span class="pre">dot</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span>
+<span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14
+</pre></div>
+</div>
+</div>
+</div>
+<p>The outer product of two vectors is computed using the transpose of the second vector:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">v</span><span class="o">*</span><span class="n">v</span><span class="o">&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3×3 Matrix{Int64}:
+ 1  2  3
+ 2  4  6
+ 3  6  9
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can compute inverse of a matrix using the <code class="docutils literal notranslate"><span class="pre">inv</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">inv</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3×3 Matrix{Float64}:
+ -0.666667  -1.33333   1.0
+ -0.666667   3.66667  -2.0
+  1.0       -2.0       1.0
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="linear-equation-solver-in-julia">
+<h2>Linear Equation solver in Julia<a class="headerlink" href="#linear-equation-solver-in-julia" title="Permalink to this heading">#</a></h2>
+<p>In the next Notebook we will implement our own solvers. However, Julia already has a built in solver for linear equations. We can use the backslash operator <code class="docutils literal notranslate"><span class="pre">\</span></code> to solve a linear equation. For example we can solve the linear equation <span class="math notranslate nohighlight">\(Ax = b\)</span> by writing <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">A</span> <span class="pre">\</span> <span class="pre">b</span></code>. Note, however, that while this solver is already quite good in solving a lot of linear equations more sophisitcated solver which are adapted to specific problems sets are often more efficient and accurate. It is also important to keep in mind that using a generic solver like the backslash operator can fail silently or can give you an very inaccurate solution without warning.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">-</span><span class="mi">13</span><span class="p">;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">15</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">-</span><span class="mf">4.5</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="o">-</span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">-</span><span class="mi">7</span><span class="w"> </span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">*</span><span class="n">x</span>
+<span class="n">x_hat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="o">\</span><span class="n">b</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4-element Vector{Float64}:
+ 3.999999999999949
+ 9.000000000000005
+ 9.000000000000018
+ 4.000000000000011
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also do the LU factorization of <span class="math notranslate nohighlight">\(A\)</span> using the <code class="docutils literal notranslate"><span class="pre">lu</span></code> function (from the LinearAlgebra package). The function returns the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span>, the upper triangular matrix <span class="math notranslate nohighlight">\(U\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">lu</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LU{Float64, Matrix{Float64}, Vector{Int64}}
+L factor:
+4×4 Matrix{Float64}:
+  1.0    0.0       0.0        0.0
+ -0.25   1.0       0.0        0.0
+  0.5   -0.153846  1.0        0.0
+ -0.5    0.153846  0.0833333  1.0
+U factor:
+4×4 Matrix{Float64}:
+ -4.0   5.0   -7.0      -10.0
+  0.0  16.25   0.25      -7.0
+  0.0   0.0    5.53846   -9.07692
+  0.0   0.0    0.0       -0.166667
+</pre></div>
+</div>
+</div>
+</div>
+<p>For more advanced linear equation solving we can use iterativesolvers.jl. It also contains the “Jacobi” and “Gauss-Seidel” solvers we had in the lecture. To get a list of solvers you can look at the documentation: <a class="reference external" href="https://iterativesolvers.julialinearalgebra.org/dev/">https://iterativesolvers.julialinearalgebra.org/dev/</a></p>
+<p>We can use the inverse to solve a linear equation. However, this is in general not recommended since it is often slower and less accurate than using <code class="docutils literal notranslate"><span class="pre">\</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">x_hat_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inv</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="o">*</span><span class="n">b</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4-element Vector{Float64}:
+ 4.000000000000025
+ 9.000000000000025
+ 9.000000000000036
+ 4.000000000000051
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="norm-of-a-vector">
+<h3>Norm of a vector<a class="headerlink" href="#norm-of-a-vector" title="Permalink to this heading">#</a></h3>
+<p>There are different commonly used norms of a vector.</p>
+<ul class="simple">
+<li><p>The 2-norm is the Euclidean norm <span class="math notranslate nohighlight">\(\|x\|_2 = \sqrt{\sum_{i=1}^n x_i^2}\)</span></p></li>
+<li><p>The 1-norm is the sum of the absolute values of the elements <span class="math notranslate nohighlight">\(\|x\|_1 = \sum_{i=1}^n |x_i|\)</span></p></li>
+<li><p>The <span class="math notranslate nohighlight">\(\infty\)</span>-norm is the maximum absolute value of the elements <span class="math notranslate nohighlight">\(\|x\|_\infty = \max_i |x_i|\)</span></p></li>
+</ul>
+<p>The norm of a vector is computed using the <code class="docutils literal notranslate"><span class="pre">norm</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">twonorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="c"># 2-norm</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.872983346207417
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">infnorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="nb">Inf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">onenorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can also normalize a vector using the <code class="docutils literal notranslate"><span class="pre">normalize</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4-element Vector{Float64}:
+  0.5163977794943222
+ -0.7745966692414833
+  0.2581988897471611
+ -0.2581988897471611
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="matrix-norms">
+<h3>Matrix norms<a class="headerlink" href="#matrix-norms" title="Permalink to this heading">#</a></h3>
+<p>There are also different matrix norms. If we view the matrix similar to a vector and use the 2-norm we get the Frobenius norm <span class="math notranslate nohighlight">\(\|A\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n |a_{ij}|^2}\)</span>.
+However, often we want to use the induced matrix norm which is defined as <span class="math notranslate nohighlight">\(\|A\| = \max_{x \neq 0} \frac{\|Ax\|}{\|x\|}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2×2 Matrix{Int64}:
+ 2   0
+ 1  -1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">Fronorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.449489742783178
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">twonorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opnorm</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.2882456112707374
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">onenorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opnorm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="c"># 1-norm: sum down the first matrix dimension </span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">infnorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opnorm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="nb">Inf</span><span class="p">)</span><span class="w"> </span><span class="c"># infinity-norm: sum down the second matrix dimension</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.0
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "julia-1.9"
+        },
+        kernelOptions: {
+            name: "julia-1.9",
+            path: "./04-LinearEquations"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'julia-1.9'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="LinearEquationsHeader.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">4. Linear Equations</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Conditioning.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">4.2 Conditioning of linear equations</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transposition">Transposition</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transposed-multiplication">Transposed multiplication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-algebra-package">Linear algebra package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-equation-solver-in-julia">Linear Equation solver in Julia</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#norm-of-a-vector">Norm of a vector</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-norms">Matrix norms</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Damian Boborzi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

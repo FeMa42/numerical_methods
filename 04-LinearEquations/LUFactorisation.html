@@ -1,0 +1,984 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>4.4 LU Factorization &#8212; Numerical Methods for Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '04-LinearEquations/LUFactorisation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5. Root Finding with Multiple Variables" href="../05-RootFindingMultipleVariables/RootFindingMultiVarHeader.html" />
+    <link rel="prev" title="4.3 Gaussian Elimination" href="GaussianElimination.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/AuxMe_300.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/AuxMe_300.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction to Numerical Methods for Engineers
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../01-TaylorApproximation/TaylorHeader.html">1. Taylor Approximation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../01-TaylorApproximation/Taylor.html">Taylor Series</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../02-RootFinding/RootFindingHeader.html">2. Root Finding</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../02-RootFinding/BisectionMethod.html">2.1 Bisection Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02-RootFinding/NewtonMethod.html">2.2 Newton’s Method</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../03-Derivatives/00DerivativesHeader.html">3. Derivatives</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../03-Derivatives/01IntroductionToDerivatives.html">3.1 Introduction to Derivatives of a function with multiple variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-Derivatives/02ComputingDerivativesofFunctions.html">3.2 Computing Derivatives of Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="LinearEquationsHeader.html">4. Linear Equations</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="LinearEquations.html">4.1 Linear Algebra in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Conditioning.html">4.2 Conditioning of linear equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GaussianElimination.html">4.3 Gaussian Elimination</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">4.4 LU Factorization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../05-RootFindingMultipleVariables/RootFindingMultiVarHeader.html">5. Root Finding with Multiple Variables</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../05-RootFindingMultipleVariables/DefinintTheRootFindingProblem.html">5.1 Defining the Root Finding  Prblem with Multiple Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../05-RootFindingMultipleVariables/RootFindingMultipleVariables.html">5.2 Newton Method with multiple variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../06-LeastSquares/LeastSquaresHeader.html">6. Least Squares</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../06-LeastSquares/LeastSquares.html">6.1 Linear Least Squares Tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../07-NeuralNetworks/NeuralNetworksHeader.html">7. Introduction to Neural Networks</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../07-NeuralNetworks/NeuralNetworks.html">7.1 Predicting currents in the Openmanipulator joints with a neural network</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../08-DifferentialEquations/00OrdinaryDifferentialEquations.html">8. Ordinary Differential Equations (ODEs)</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/01IntroductiontoODEs.html">8.1. Introduction to ODEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/02DirectionFields.html">8.2. Understanding Ordinary Differential Equations - Direction Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/03NumericallySolvingODEsEuler.html">8.3. Introduction to Numerically solving Ordinary Differential Equations - Euler Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/04StabilityAndStiffness.html">8.4. Stability and Stiffness of Numerical Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/05HigherOrderSolvers.html">8.5. Higher Order Methods to solve ODEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../09-PrincipalComponentAnalysis/SingularValueDecomposition.html">9. Singular Value Decomposition (SVD)</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../09-PrincipalComponentAnalysis/IntroductionToSVD.html">9.1 Quick Overview of the Definition of SVD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../09-PrincipalComponentAnalysis/IntroducingPCA.html">9.2 Introduction to Principal Component Analysis (PCA)</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/FeMa42/numerical_methods" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/FeMa42/numerical_methods/issues/new?title=Issue%20on%20page%20%2F04-LinearEquations/LUFactorisation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/04-LinearEquations/LUFactorisation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>4.4 LU Factorization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pivoting">Pivoting</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="tex2jax_ignore mathjax_ignore section" id="lu-factorization">
+<span id="id1"></span><h1>4.4 LU Factorization<a class="headerlink" href="#lu-factorization" title="Permalink to this heading">#</a></h1>
+<p>We learned that we can transform the linear equation with the square matrix <span class="math notranslate nohighlight">\(A\)</span> into a upper triangular matrix <span class="math notranslate nohighlight">\(U\)</span>. In the lecture we learned that we can also transform the linear equation into an lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span> and an upper triangular matrix <span class="math notranslate nohighlight">\(U\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[
+A = LU
+\]</div>
+<p>This is called the LU factorization of <span class="math notranslate nohighlight">\(A\)</span>. The LU factorization is useful for solving linear equations especially when the right hand side vector <span class="math notranslate nohighlight">\(b\)</span> is changed. In this case, we can solve the linear equations by solving <span class="math notranslate nohighlight">\(Ly = b\)</span> and <span class="math notranslate nohighlight">\(Ux = y\)</span>. In the example above we would have to perform the whole calculation again. However, if we have the LU factorization of <span class="math notranslate nohighlight">\(A\)</span> we can solve the linear equations much faster.</p>
+<p>In the lecture we learned that we can use outer products using the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span> divided into a part for each column. For a 3x3 matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+A = 
+\begin{pmatrix}
+a_{11} &amp; a_{12} &amp; a_{13} \\
+a_{21} &amp; a_{22} &amp; a_{23} \\
+a_{31} &amp; a_{32} &amp; a_{33} \\
+\end{pmatrix}\end{split}\]</div>
+<p>we divide the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span> into two parts:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+L = L_1 * L_2 =
+\begin{pmatrix}
+1 &amp; 0 &amp; 0 \\
+a_{21}/a_{11} &amp; 1 &amp; 0 \\
+a_{31}/a_{11} &amp; 0 &amp; 1 \\
+\end{pmatrix}
+*
+\begin{pmatrix}
+1 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 \\
+0 &amp; a_{32}/a_{22} &amp; 1 \\
+\end{pmatrix}
+\end{split}\]</div>
+<p>Using this we can write:</p>
+<div class="math notranslate nohighlight">
+\[
+L_1 * L_2 * A = U
+\]</div>
+<p>For a general square matrix <span class="math notranslate nohighlight">\(A\)</span> we can write:</p>
+<div class="math notranslate nohighlight">
+\[
+L_1 * L_2 * l_k * ... * L_{K} * A = U
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(L_k\)</span> is the lower triangular matrix for the <span class="math notranslate nohighlight">\(k\)</span>-th column as is has only non-zero values on the diagonal and the k-th column. The <span class="math notranslate nohighlight">\(k\)</span>-th column of <span class="math notranslate nohighlight">\(L_k\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+(L_k)_{ik} = \frac{a^{k-1}_{ik}}{a^{k-1}_{kk}}
+\]</div>
+<p>Where <span class="math notranslate nohighlight">\(a^{k-1}_{ik}\)</span> is the <span class="math notranslate nohighlight">\(i\)</span>-th element of the <span class="math notranslate nohighlight">\(k\)</span>-th column of <span class="math notranslate nohighlight">\(A^{k-1} = L_1 * L_2 * l_k * ... * L_{k-1} * A\)</span>.</p>
+<p>We can now write a function that calculates the LU factorization of a square matrix <span class="math notranslate nohighlight">\(A\)</span>. The function should take the matrix <span class="math notranslate nohighlight">\(A\)</span> as input and return the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span> and the upper triangular matrix <span class="math notranslate nohighlight">\(U\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="n">Pkg</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">instantiate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">10</span><span class="p">];</span>
+<span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">LinearAlgebra</span>
+<span class="k">function</span><span class="w"> </span><span class="n">lufact</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diagm</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="w">   </span><span class="c"># ones on main diagonal, zeros elsewhere</span>
+<span class="w">    </span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Aₖ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">float</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="n">A</span><span class="p">))</span><span class="w">  </span><span class="c"># copy of A, converted to float</span>
+
+<span class="w">    </span><span class="c"># Reduction by outer products</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">        </span><span class="n">U</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Aₖ</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="o">:</span><span class="p">]</span>
+<span class="w">        </span><span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Aₖ</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">]</span>
+<span class="w">        </span><span class="n">Aₖ</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="o">&#39;</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="n">U</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Aₖ</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">]</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">LowerTriangular</span><span class="p">(</span><span class="n">L</span><span class="p">),</span><span class="n">UpperTriangular</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>lufact (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s test the function with the matrix <span class="math notranslate nohighlight">\(A\)</span> defined above. We should get the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span> and the upper triangular matrix <span class="math notranslate nohighlight">\(U\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lufact</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>([1.0 0.0 0.0; 4.0 1.0 0.0; 7.0 2.0 1.0], [1.0 2.0 3.0; 0.0 -3.0 -6.0; 0.0 0.0 1.0])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now to solve the linear equation we can use the LU factorization of <span class="math notranslate nohighlight">\(A\)</span> and solve the linear equations by solving <span class="math notranslate nohighlight">\(Ly = b\)</span> and <span class="math notranslate nohighlight">\(Ux = y\)</span>. First we define a function for the forward substitution to solve <span class="math notranslate nohighlight">\(Ly = b\)</span>. The function should take the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span> and the vector <span class="math notranslate nohighlight">\(b\)</span> as input and return the solution vector <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">forwardsub</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">2</span><span class="o">:</span><span class="n">n</span>
+<span class="w">        </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="w"> </span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">)</span>
+<span class="w">        </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">y</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>forwardsub (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now let’s define a function for the back substitution to solve <span class="math notranslate nohighlight">\(Ux = y\)</span>. The function should take the upper triangular matrix <span class="math notranslate nohighlight">\(U\)</span> and the vector <span class="math notranslate nohighlight">\(y\)</span> as input and return the solution vector <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">backsub</span><span class="p">(</span><span class="n">U</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">U</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">]</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">:-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span>
+<span class="w">        </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="w"> </span><span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="n">n</span><span class="w"> </span><span class="p">)</span>
+<span class="w">        </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">U</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">x</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>backsub (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally we want to test our implementation using the following matrix <span class="math notranslate nohighlight">\(A\)</span> and vector <span class="math notranslate nohighlight">\(b\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="o">-</span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">-</span><span class="mi">7</span><span class="w"> </span><span class="o">-</span><span class="mi">10</span><span class="p">;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">15</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">-</span><span class="mf">4.5</span><span class="p">;</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">-</span><span class="mi">13</span><span class="p">];</span>
+<span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>First we calculate the LU factorization of <span class="math notranslate nohighlight">\(A\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">L</span><span class="p">,</span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lufact</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>([1.0 0.0 0.0 0.0; -2.0 1.0 0.0 0.0; 0.5 3.0 1.0 0.0; -1.0 0.0 -2.0 1.0], [2.0 0.0 4.0 3.0; 0.0 5.0 1.0 -4.0; 0.0 0.0 -3.0 6.0; 0.0 0.0 0.0 2.0])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can solve the linear equation by solving <span class="math notranslate nohighlight">\(Ly = b\)</span> and <span class="math notranslate nohighlight">\(Ux = y\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forwardsub</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">backsub</span><span class="p">(</span><span class="n">U</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4-element Vector{Float64}:
+ 192.66666666666666
+ -15.533333333333335
+ -65.33333333333333
+ -40.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>And let’s check the error of the solution:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">b</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">A</span><span class="o">*</span><span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4-element Vector{Float64}:
+  0.0
+ -5.684341886080802e-14
+  2.842170943040401e-14
+  0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Nice! We actually found a way to solve linear equations in an efficient way. There is one caveat though. This method is not always stable and can fail for some matrices. For example if we swap the second and fourth row of <span class="math notranslate nohighlight">\(A\)</span> the resluting matrix <span class="math notranslate nohighlight">\(A\)</span> is not invertible and the LU factorization fails:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="o">:</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="o">:</span><span class="p">]</span><span class="w">  </span>
+<span class="n">L</span><span class="p">,</span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lufact</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">L</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4×4 LowerTriangular{Float64, Matrix{Float64}}:
+  1.0     ⋅      ⋅    ⋅ 
+ -1.0  NaN       ⋅    ⋅ 
+  0.5   Inf   NaN     ⋅ 
+ -2.0   Inf   NaN    1.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can actually see why this fails if we take a look at the matrix <span class="math notranslate nohighlight">\(A\)</span>. The problem is that element <span class="math notranslate nohighlight">\(a_{22}\)</span> is zero. In the second step we are supposed to divide by <span class="math notranslate nohighlight">\(a_{22}\)</span> which is zero.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4×4 Matrix{Float64}:
+  2.0   0.0   4.0    3.0
+ -2.0   0.0   2.0  -13.0
+  1.0  15.0   2.0   -4.5
+ -4.0   5.0  -7.0  -10.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, we know that this linear equation is actually solvable. Can we fix this?</p>
+<div class="section" id="pivoting">
+<h2>Pivoting<a class="headerlink" href="#pivoting" title="Permalink to this heading">#</a></h2>
+<p>To avoid dividing by zero, we can change the order of the coulmns before we perform the elimination in each column. We will use the largest available element in the column we are working on as the pivot element - the element we divide by. This technique is known as column pivoting.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">-</span><span class="mi">13</span><span class="p">;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">15</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">-</span><span class="mf">4.5</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="o">-</span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">-</span><span class="mi">7</span><span class="w"> </span><span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4×4 Matrix{Float64}:
+  2.0   0.0   4.0    3.0
+ -2.0   0.0   2.0  -13.0
+  1.0  15.0   2.0   -4.5
+ -4.0   5.0  -7.0  -10.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Using the same matirx as before the first step looks like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">A_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">float</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>
+<span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argmax</span><span class="p">(</span><span class="n">abs</span><span class="o">.</span><span class="p">(</span><span class="n">A_1</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span><span class="w"> </span><span class="c"># find largest element </span>
+<span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="c"># store index of largest element in p[1]</span>
+<span class="n">L</span><span class="p">,</span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="w"> </span><span class="c"># copy row i of A to row 1 of U </span>
+<span class="c"># perform elimination as before</span>
+<span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_1</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span>
+<span class="n">A_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="o">&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4×4 Matrix{Float64}:
+ 0.0   2.5   0.5   -2.0
+ 0.0  -2.5   5.5   -8.0
+ 0.0  16.25  0.25  -7.0
+ 0.0   0.0   0.0    0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>The second step looks like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argmax</span><span class="p">(</span><span class="n">abs</span><span class="o">.</span><span class="p">(</span><span class="n">A_2</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span><span class="w"> </span>
+<span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span>
+<span class="n">U</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="o">:</span><span class="p">]</span>
+<span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_2</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">A_3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="o">&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4×4 Matrix{Float64}:
+ 0.0  0.0  0.461538  -0.923077
+ 0.0  0.0  5.53846   -9.07692
+ 0.0  0.0  0.0        0.0
+ 0.0  0.0  0.0        0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>The third step looks like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argmax</span><span class="p">(</span><span class="n">abs</span><span class="o">.</span><span class="p">(</span><span class="n">A_3</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span><span class="w"> </span>
+<span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span>
+<span class="n">U</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_3</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="o">:</span><span class="p">]</span>
+<span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_3</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">A_4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_3</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="o">&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4×4 Matrix{Float64}:
+ 0.0  0.0  0.0  -0.166667
+ 0.0  0.0  0.0   0.0
+ 0.0  0.0  0.0   0.0
+ 0.0  0.0  0.0   0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>And the last step looks like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argmax</span><span class="p">(</span><span class="n">abs</span><span class="o">.</span><span class="p">(</span><span class="n">A_4</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">4</span><span class="p">]))</span><span class="w"> </span>
+<span class="n">p</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span>
+<span class="n">U</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_4</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="o">:</span><span class="p">]</span>
+<span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A_4</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">];</span>
+<span class="n">L</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4×4 Matrix{Float64}:
+ -0.5    0.153846  0.0833333   1.0
+  0.5   -0.153846  1.0        -0.0
+ -0.25   1.0       0.0        -0.0
+  1.0    0.0       0.0        -0.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can see that we can solve the linear equation by swapping the columns. However we can see that we also changed the order of the elements in the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span>. We can fix this by keeping track of the order of the columns and swapping the elements in the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span> back accordingly:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">L</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="o">:</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4×4 Matrix{Float64}:
+  1.0    0.0       0.0        -0.0
+ -0.25   1.0       0.0        -0.0
+  0.5   -0.153846  1.0        -0.0
+ -0.5    0.153846  0.0833333   1.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now write a function that calculates the LU factorization of a square matrix <span class="math notranslate nohighlight">\(A\)</span> using column pivoting. The function should take the matrix <span class="math notranslate nohighlight">\(A\)</span> as input and return the lower triangular matrix <span class="math notranslate nohighlight">\(L\)</span>, the upper triangular matrix <span class="math notranslate nohighlight">\(U\)</span> and a vector <span class="math notranslate nohighlight">\(p\)</span> containing the pivot elements.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">plufact</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fill</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">Aₖ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">float</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>
+
+<span class="w">    </span><span class="c"># Reduction by outer products</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">        </span><span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argmax</span><span class="p">(</span><span class="n">abs</span><span class="o">.</span><span class="p">(</span><span class="n">Aₖ</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">k</span><span class="p">]))</span><span class="w"> </span><span class="c"># find largest element in column k and store in p[k]</span>
+<span class="w">        </span><span class="n">U</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Aₖ</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="o">:</span><span class="p">]</span>
+<span class="w">        </span><span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Aₖ</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">]</span>
+<span class="w">        </span><span class="n">Aₖ</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="o">:</span><span class="p">]</span><span class="o">&#39;</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="n">p</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argmax</span><span class="p">(</span><span class="n">abs</span><span class="o">.</span><span class="p">(</span><span class="n">Aₖ</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">n</span><span class="p">]))</span>
+<span class="w">    </span><span class="n">U</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Aₖ</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="n">n</span><span class="p">]</span>
+<span class="w">    </span><span class="n">L</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Aₖ</span><span class="p">[</span><span class="o">:</span><span class="p">,</span><span class="n">n</span><span class="p">]</span><span class="o">/</span><span class="n">U</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">]</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">LowerTriangular</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">p</span><span class="p">,</span><span class="o">:</span><span class="p">]),</span><span class="n">U</span><span class="p">,</span><span class="n">p</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>plufact (generic function with 1 method)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">plufact</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>([1.0 0.0 0.0 0.0; -0.25 1.0 0.0 0.0; 0.5 -0.15384615384615385 1.0 0.0; -0.5 0.15384615384615385 0.08333333333333334 1.0], [-4.0 5.0 -7.0 -10.0; 0.0 16.25 0.25 -7.0; 0.0 0.0 5.538461538461538 -9.076923076923077; 0.0 0.0 0.0 -0.1666666666666664], [4, 3, 2, 1])
+</pre></div>
+</div>
+</div>
+</div>
+<p>To solve for a given vector <span class="math notranslate nohighlight">\(b\)</span> we can now use the pivot LU factorization of <span class="math notranslate nohighlight">\(A\)</span> by also changing the order of the elements in the vector <span class="math notranslate nohighlight">\(b\)</span> accordingly:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forwardsub</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">b</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+<span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">backsub</span><span class="p">(</span><span class="n">U</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4-element Vector{Float64}:
+ 18.063489021884052
+ -1.4579225290873112
+ -6.093923798139574
+ -3.7338758276315955
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">b</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">A</span><span class="o">*</span><span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4-element Vector{Float64}:
+  2.1094237467877974e-15
+ -1.2212453270876722e-15
+  8.881784197001252e-16
+ -3.1086244689504383e-15
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "julia-1.9"
+        },
+        kernelOptions: {
+            name: "julia-1.9",
+            path: "./04-LinearEquations"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'julia-1.9'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="GaussianElimination.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">4.3 Gaussian Elimination</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../05-RootFindingMultipleVariables/RootFindingMultiVarHeader.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">5. Root Finding with Multiple Variables</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pivoting">Pivoting</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Damian Boborzi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

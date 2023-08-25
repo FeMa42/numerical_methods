@@ -1,0 +1,797 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3.3 Practical Application of Numerical Derivatives - Calculation the end effector velocity based on the joint velocities &#8212; Numerical Methods for Engineers</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'legacy/03DerivativesOfKinematics';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/AuxMe_300.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/AuxMe_300.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction to Numerical Methods for Engineers
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../01-TaylorApproximation/TaylorHeader.html">1. Taylor Approximation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../01-TaylorApproximation/Taylor.html">Taylor Series</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../02-RootFinding/RootFindingHeader.html">2. Root Finding</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../02-RootFinding/BisectionMethod.html">2.1 Bisection Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../02-RootFinding/NewtonMethod.html">2.2 Newton’s Method</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../03-Derivatives/00DerivativesHeader.html">3. Derivatives</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../03-Derivatives/01IntroductionToDerivatives.html">3.1 Introduction to Derivatives of a function with multiple variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03-Derivatives/02ComputingDerivativesofFunctions.html">3.2 Computing Derivatives of Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../04-LinearEquations/LinearEquationsHeader.html">4. Linear Equations</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../04-LinearEquations/LinearEquations.html">4.1 Linear Algebra in Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../04-LinearEquations/Conditioning.html">4.2 Conditioning of linear equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../04-LinearEquations/GaussianElimination.html">4.3 Gaussian Elimination</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../04-LinearEquations/LUFactorisation.html">4.4 LU Factorization</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../05-RootFindingMultipleVariables/RootFindingMultiVarHeader.html">5. Root Finding with Multiple Variables</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../05-RootFindingMultipleVariables/DefinintTheRootFindingProblem.html">5.1 Defining the Root Finding  Prblem with Multiple Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../05-RootFindingMultipleVariables/RootFindingMultipleVariables.html">5.2 Newton Method with multiple variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../06-LeastSquares/LeastSquaresHeader.html">6. Least Squares</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../06-LeastSquares/LeastSquares.html">6.1 Linear Least Squares Tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../07-NeuralNetworks/NeuralNetworksHeader.html">7. Introduction to Neural Networks</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-7"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../07-NeuralNetworks/NeuralNetworks.html">7.1 Predicting currents in the Openmanipulator joints with a neural network</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../08-DifferentialEquations/00OrdinaryDifferentialEquations.html">8. Ordinary Differential Equations (ODEs)</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/01IntroductiontoODEs.html">8.1. Introduction to ODEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/02DirectionFields.html">8.2. Understanding Ordinary Differential Equations - Direction Fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/03NumericallySolvingODEsEuler.html">8.3. Introduction to Numerically solving Ordinary Differential Equations - Euler Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/04StabilityAndStiffness.html">8.4. Stability and Stiffness of Numerical Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../08-DifferentialEquations/05HigherOrderSolvers.html">8.5. Higher Order Methods to solve ODEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../09-PrincipalComponentAnalysis/SingularValueDecomposition.html">9. Singular Value Decomposition (SVD)</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-9"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../09-PrincipalComponentAnalysis/IntroductionToSVD.html">9.1 Quick Overview of the Definition of SVD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../09-PrincipalComponentAnalysis/IntroducingPCA.html">9.2 Introduction to Principal Component Analysis (PCA)</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/FeMa42/numerical_methods" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/FeMa42/numerical_methods/issues/new?title=Issue%20on%20page%20%2Flegacy/03DerivativesOfKinematics.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/legacy/03DerivativesOfKinematics.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>3.3 Practical Application of Numerical Derivatives - Calculation the end effector velocity based on the joint velocities</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-the-jacobian-matrix-of-the-openmanipulator-x-kinematics">Estimating the Jacobian matrix of the Openmanipulator-X kinematics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-the-end-effector-velocity-using-the-jacobian-matrix">Calculating the end effector velocity using the Jacobian matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-the-end-effector-velocity-calculation-to-the-openmanipulator-x">Applying the end effector velocity calculation to the Openmanipulator-X</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="tex2jax_ignore mathjax_ignore section" id="practical-application-of-numerical-derivatives-calculation-the-end-effector-velocity-based-on-the-joint-velocities">
+<span id="practical-application"></span><h1>3.3 Practical Application of Numerical Derivatives - Calculation the end effector velocity based on the joint velocities<a class="headerlink" href="#practical-application-of-numerical-derivatives-calculation-the-end-effector-velocity-based-on-the-joint-velocities" title="Permalink to this heading">#</a></h1>
+<p>We can measure the joint velocities of our Openmanipulator. However, we are interested in the speed of the end effector. We have seen in the lecture that we can calculate the end effector velocity based on the joint velocities using the Jacobian matrix.</p>
+<div class="section" id="estimating-the-jacobian-matrix-of-the-openmanipulator-x-kinematics">
+<h2>Estimating the Jacobian matrix of the Openmanipulator-X kinematics<a class="headerlink" href="#estimating-the-jacobian-matrix-of-the-openmanipulator-x-kinematics" title="Permalink to this heading">#</a></h2>
+<p>To estimate the velocity of the end effector we need to know the forward kinematics of the Openmanipulator-X and estimate the derivative of the forward kinematics.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="n">Pkg</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="s">&quot;../Exercise 3/OpenMEnv&quot;</span><span class="p">)</span><span class="w"> </span>
+<span class="k">using</span><span class="w"> </span><span class="n">Revise</span>
+<span class="n">include</span><span class="p">(</span><span class="s">&quot;../OpenManipulatorLib/OpenManipulatorKinematics.jl&quot;</span><span class="p">)</span>
+<span class="k">using</span><span class="w"> </span><span class="o">.</span><span class="n">OpenManipulatorKineamtics</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold -Color-Bold-Green">  Activating</span> new project at `~/Library/Mobile Documents/com~apple~CloudDocs/Projects/numerical_methods/Exercise 3/OpenMEnv`
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="ne">SystemError</span>: opening file &quot;/Users/damian/Library/Mobile Documents/com~apple~CloudDocs/Projects/numerical_methods/OpenManipulatorLib/OpenManipulatorKinematics.jl&quot;: No such file or directory
+
+<span class="ne">Stacktrace</span>:
+  <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">systemerror</span><span class="p">(</span><span class="n">p</span><span class="p">::</span><span class="n">String</span><span class="p">,</span> <span class="n">errno</span><span class="p">::</span><span class="n">Int32</span><span class="p">;</span> <span class="n">extrainfo</span><span class="p">::</span><span class="n">Nothing</span><span class="p">)</span>
+    <span class="o">@</span> <span class="n">Base</span> <span class="o">./</span><span class="n">error</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">176</span>
+  <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="c1">#systemerror#82</span>
+    <span class="o">@</span> <span class="o">./</span><span class="n">error</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">175</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+  <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="n">systemerror</span>
+    <span class="o">@</span> <span class="o">./</span><span class="n">error</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">175</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+  <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">::</span><span class="n">String</span><span class="p">;</span> <span class="n">lock</span><span class="p">::</span><span class="n">Bool</span><span class="p">,</span> <span class="n">read</span><span class="p">::</span><span class="n">Nothing</span><span class="p">,</span> <span class="n">write</span><span class="p">::</span><span class="n">Nothing</span><span class="p">,</span> <span class="n">create</span><span class="p">::</span><span class="n">Nothing</span><span class="p">,</span> <span class="n">truncate</span><span class="p">::</span><span class="n">Nothing</span><span class="p">,</span> <span class="n">append</span><span class="p">::</span><span class="n">Nothing</span><span class="p">)</span>
+    <span class="o">@</span> <span class="n">Base</span> <span class="o">./</span><span class="n">iostream</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">293</span>
+  <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="nb">open</span>
+    <span class="o">@</span> <span class="o">./</span><span class="n">iostream</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">275</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+  <span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">::</span><span class="n">Base</span><span class="o">.</span><span class="n">var</span><span class="s2">&quot;#418#419&quot;</span><span class="p">{</span><span class="n">String</span><span class="p">},</span> <span class="n">args</span><span class="p">::</span><span class="n">String</span><span class="p">;</span> <span class="n">kwargs</span><span class="p">::</span><span class="n">Base</span><span class="o">.</span><span class="n">Pairs</span><span class="p">{</span><span class="n">Symbol</span><span class="p">,</span> <span class="n">Union</span><span class="p">{},</span> <span class="n">Tuple</span><span class="p">{},</span> <span class="n">NamedTuple</span><span class="p">{(),</span> <span class="n">Tuple</span><span class="p">{}}})</span>
+    <span class="o">@</span> <span class="n">Base</span> <span class="o">./</span><span class="n">io</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">393</span>
+  <span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="nb">open</span>
+    <span class="o">@</span> <span class="o">./</span><span class="n">io</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">392</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+  <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">read</span>
+    <span class="o">@</span> <span class="o">./</span><span class="n">io</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">473</span> <span class="p">[</span><span class="n">inlined</span><span class="p">]</span>
+  <span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="n">_include</span><span class="p">(</span><span class="n">mapexpr</span><span class="p">::</span><span class="n">Function</span><span class="p">,</span> <span class="n">mod</span><span class="p">::</span><span class="n">Module</span><span class="p">,</span> <span class="n">_path</span><span class="p">::</span><span class="n">String</span><span class="p">)</span>
+    <span class="o">@</span> <span class="n">Base</span> <span class="o">./</span><span class="n">loading</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">1920</span>
+ <span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="n">include</span><span class="p">(</span><span class="n">fname</span><span class="p">::</span><span class="n">String</span><span class="p">)</span>
+    <span class="o">@</span> <span class="n">Base</span><span class="o">.</span><span class="n">MainInclude</span> <span class="o">./</span><span class="n">client</span><span class="o">.</span><span class="n">jl</span><span class="p">:</span><span class="mi">478</span>
+ <span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="n">top</span><span class="o">-</span><span class="n">level</span> <span class="n">scope</span>
+    <span class="o">@</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="mi">4</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Estimate the jacobian matrix of the forward kinematics for our robot arm using automatic differentiation. We can use the function <code class="docutils literal notranslate"><span class="pre">ForwardDiff.jacobian</span></code> to calculate the Jacobian matrix of the forward kinematics.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">ForwardDiff</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">openmanipulator_jacobian</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="w">    </span><span class="c"># Define a function that returns the position of the end effector</span>
+<span class="w">    </span><span class="n">f</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OpenManipulatorKineamtics</span><span class="o">.</span><span class="n">complete_forward_kinematics</span><span class="p">(</span><span class="n">q</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="w">    </span><span class="c"># Calculate the Jacobian matrix using ForwardDiff.jacobian</span>
+<span class="w">    </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ForwardDiff</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">J</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can use the function <code class="docutils literal notranslate"><span class="pre">ReverseDiff.jacobian</span></code> to calculate the Jacobian matrix of the forward kinematics.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">using</span><span class="w"> </span><span class="n">ReverseDiff</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">openmanipulator_jacobian_rev_AD</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="w">    </span><span class="c"># Define a function that returns the position of the end effector</span>
+<span class="w">    </span><span class="n">f</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OpenManipulatorKineamtics</span><span class="o">.</span><span class="n">complete_forward_kinematics</span><span class="p">(</span><span class="n">q</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="w">    </span><span class="c"># Calculate the Jacobian matrix using ForwardDiff.jacobian</span>
+<span class="w">    </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReverseDiff</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">J</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now estimate the jacobian matrix using finite differences:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">import</span><span class="w"> </span><span class="n">FiniteDifferences</span>
+
+<span class="k">function</span><span class="w"> </span><span class="n">openmanipulator_jacobian_finiteDiff</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="w">    </span><span class="c"># Define a function that returns the position of the end effector</span>
+<span class="w">    </span><span class="n">f</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OpenManipulatorKineamtics</span><span class="o">.</span><span class="n">complete_forward_kinematics</span><span class="p">(</span><span class="n">q</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="w">    </span>
+<span class="w">    </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FiniteDifferences</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">FiniteDifferences</span><span class="o">.</span><span class="n">central_fdm</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">J</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, lets compare the time and results of the methods. What do you observe?</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="nd">@time</span><span class="w"> </span><span class="n">openmanipulator_jacobian</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="nd">@time</span><span class="w"> </span><span class="n">openmanipulator_jacobian_rev_AD</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="nd">@time</span><span class="w"> </span><span class="n">openmanipulator_jacobian_finiteDiff</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="calculating-the-end-effector-velocity-using-the-jacobian-matrix">
+<h2>Calculating the end effector velocity using the Jacobian matrix<a class="headerlink" href="#calculating-the-end-effector-velocity-using-the-jacobian-matrix" title="Permalink to this heading">#</a></h2>
+<p>Erlier we said that based on the total derivative we can derive the rule for differentiating our system of equations <span class="math notranslate nohighlight">\(f_1(x,y)\)</span> and <span class="math notranslate nohighlight">\(f_2(x,y)\)</span> with respect to the variable <span class="math notranslate nohighlight">\(t\)</span> when <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are functions of <span class="math notranslate nohighlight">\(t\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\frac{d}{dt} \begin{bmatrix}
+f_1(x,y) \\
+f_2(x,y)
+\end{bmatrix} = \begin{bmatrix}
+\frac{\partial f_1}{\partial x} &amp; \frac{\partial f_1}{\partial y} \\
+\frac{\partial f_2}{\partial x} &amp; \frac{\partial f_2}{\partial y}
+\end{bmatrix} \begin{bmatrix}
+\frac{\partial x}{\partial t} \\
+\frac{\partial y}{\partial t}
+\end{bmatrix}
+= \mathbf{J} \begin{bmatrix}
+\frac{\partial x}{\partial t} \\
+\frac{\partial y}{\partial t}
+\end{bmatrix}
+\end{split}\]</div>
+<p>Based on this rule we can estimate the end effector velocity using the Jacobian matrix. We can use the following estimation:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+v = \mathbf{J}(q) * \mathbf{q}_v = \mathbf{J}(q) * \begin{bmatrix}
+\frac{\partial q_1}{\partial t} \\
+\frac{\partial  q_2}{\partial t} \\
+\frac{\partial  q_3}{\partial t} \\
+\frac{\partial  q_4}{\partial t} \\
+\end{bmatrix} 
+\approx J(q) * \begin{bmatrix}
+\Delta q_1 \\
+\Delta q_2 \\
+\Delta q_3 \\
+\Delta q_4 \\
+\end{bmatrix} 
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(v\)</span> is the end effector velocity, <span class="math notranslate nohighlight">\(\mathbf{J}(q)\)</span> is the Jacobian matrix evaluated at the current joint angles <span class="math notranslate nohighlight">\(q\)</span>, and <span class="math notranslate nohighlight">\(\mathbf{q}_v\)</span> is the joint velocity vector, which we can estimate with the joint approximate velocities <span class="math notranslate nohighlight">\(\Delta q_1\)</span>, <span class="math notranslate nohighlight">\(\Delta q_2\)</span>, <span class="math notranslate nohighlight">\(\Delta q_3\)</span>, and <span class="math notranslate nohighlight">\(\Delta q_4\)</span>.</p>
+<p>Implement the <code class="docutils literal notranslate"><span class="pre">endeffector_velocity</span></code> function that uses the Jacobian matrix to calculate the end effector velocity. The function should takes in the joint angles <code class="docutils literal notranslate"><span class="pre">q</span></code> and joint velocity vector <code class="docutils literal notranslate"><span class="pre">q_v</span></code>, and returns the end effector velocity <code class="docutils literal notranslate"><span class="pre">v</span></code> calculated using the Jacobian matrix. Use the <code class="docutils literal notranslate"><span class="pre">openmanipulator_jacobian</span></code> function you implemented to calculate the Jacobian matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">endeffector_velocity</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="w"> </span><span class="n">q_v</span><span class="p">)</span>
+<span class="w">    </span><span class="c"># Calculate the Jacobian matrix at the current joint angles</span>
+<span class="w">    </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">openmanipulator_jacobian</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c"># Calculate the end effector velocity using the Jacobian matrix</span>
+<span class="w">    </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">q_v</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">v</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s test the function with the following joint angles and joint velocities:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">q_v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span>
+<span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">endeffector_velocity</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="w"> </span><span class="n">q_v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="applying-the-end-effector-velocity-calculation-to-the-openmanipulator-x">
+<h2>Applying the end effector velocity calculation to the Openmanipulator-X<a class="headerlink" href="#applying-the-end-effector-velocity-calculation-to-the-openmanipulator-x" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>let’s start the Openmanipulator and subscrib to the joint states</p></li>
+<li><p>Calculate the end effector velocity using the joint velocities and the Jacobian matrix</p></li>
+<li><p>Do this by adding a new function which is the new callback function for the joint states subscriber and which calls the <code class="docutils literal notranslate"><span class="pre">endeffector_velocity</span></code> function</p></li>
+<li><p>print the end effector velocity to the console while you move the Openmanipulator</p></li>
+</ul>
+<p>Since we are working with subscriptions it might be handy to be ablte to restart the notebook withour restarting Gazebo. Go to your Terminal and start the following two programs in seperate cells:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>roslaunch<span class="w"> </span>open_manipulator_gazebo<span class="w"> </span>open_manipulator_gazebo.launch
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>roslaunch<span class="w"> </span>open_manipulator_controller<span class="w"> </span>open_manipulator_controller.launch<span class="w"> </span>use_platform:<span class="o">=</span><span class="nb">false</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">include</span><span class="p">(</span><span class="s">&quot;../OpenManipulatorLib/OpenManipulatorBase.jl&quot;</span><span class="p">)</span>
+<span class="k">using</span><span class="w"> </span><span class="o">.</span><span class="n">OpenManipulatorBase</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">OpenManipulatorBase</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span><span class="n">sub_joint_to_endeffector</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
+<span class="w">    </span><span class="n">OpenManipulatorBase</span><span class="o">.</span><span class="n">reset_robot</span><span class="p">()</span>
+<span class="w">    </span><span class="n">OpenManipulatorBase</span><span class="o">.</span><span class="n">rossleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">function</span><span class="w"> </span><span class="n">joint_state_sub_callback</span><span class="p">(</span><span class="n">sensor_msg</span><span class="o">::</span><span class="kt">JointState</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="o">::</span><span class="kt">Array</span><span class="p">{</span><span class="kt">Any</span><span class="p">,</span><span class="mi">1</span><span class="p">})</span>
+<span class="w">        </span><span class="n">header_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">to_sec</span><span class="p">(</span><span class="n">sensor_msg</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">stamp</span><span class="p">)</span><span class="o">/</span><span class="mf">60.0</span><span class="w"> </span><span class="c"># header time in minutes</span>
+<span class="w">        </span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor_msg</span><span class="o">.</span><span class="n">name</span>
+<span class="w">        </span><span class="n">positions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor_msg</span><span class="o">.</span><span class="n">position</span>
+<span class="w">        </span><span class="n">velocities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor_msg</span><span class="o">.</span><span class="n">velocity</span>
+<span class="w">        </span><span class="c"># v = J * q_v</span>
+<span class="w">        </span><span class="n">joint_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names</span><span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">6</span><span class="p">]</span>
+<span class="w">        </span><span class="n">q_v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">velocities</span><span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">6</span><span class="p">]</span>
+<span class="w">        </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">positions</span><span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">6</span><span class="p">]</span>
+<span class="w">        </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">endeffector_velocity</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="w"> </span><span class="n">q_v</span><span class="p">)</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Header Time: </span><span class="si">$header_time</span><span class="s"> minutes&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Name: </span><span class="si">$joint_names</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Joint Velocities: </span><span class="si">$q_v</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Joint Angles: </span><span class="si">$q</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;End Effector Velocity: </span><span class="si">$v</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="n">push!</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">length</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">            </span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="n">sub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">Subscriber</span><span class="p">{</span><span class="kt">JointState</span><span class="p">}(</span><span class="s">&quot;/joint_states&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">joint_state_sub_callback</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">list</span><span class="p">,),</span><span class="w"> </span><span class="n">queue_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">sending_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">to_sec</span><span class="p">(</span><span class="n">RobotOS</span><span class="o">.</span><span class="n">now</span><span class="p">())</span><span class="o">/</span><span class="mf">60.0</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Sending Time: </span><span class="si">$sending_time</span><span class="s"> minutes&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">OpenManipulatorBase</span><span class="o">.</span><span class="n">set_joint_angles</span><span class="p">([</span><span class="mf">0.6</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mf">0.1</span><span class="p">])</span>
+<span class="w">    </span><span class="n">after_sending_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">to_sec</span><span class="p">(</span><span class="n">RobotOS</span><span class="o">.</span><span class="n">now</span><span class="p">())</span><span class="o">/</span><span class="mf">60.0</span>
+<span class="w">    </span><span class="n">println</span><span class="p">(</span><span class="s">&quot;After sending Time: </span><span class="si">$after_sending_time</span><span class="s"> minutes&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="n">OpenManipulatorBase</span><span class="o">.</span><span class="n">rossleep</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">list</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-julia notranslate"><div class="highlight"><pre><span></span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[]</span>
+<span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_joint_to_endeffector</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
+<span class="n">sleep</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="n">println</span><span class="p">(</span><span class="s">&quot;End Effector Velocities: </span><span class="si">$list</span><span class="s">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "julia-1.9"
+        },
+        kernelOptions: {
+            name: "julia-1.9",
+            path: "./legacy"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'julia-1.9'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#estimating-the-jacobian-matrix-of-the-openmanipulator-x-kinematics">Estimating the Jacobian matrix of the Openmanipulator-X kinematics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-the-end-effector-velocity-using-the-jacobian-matrix">Calculating the end effector velocity using the Jacobian matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-the-end-effector-velocity-calculation-to-the-openmanipulator-x">Applying the end effector velocity calculation to the Openmanipulator-X</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Damian Boborzi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
