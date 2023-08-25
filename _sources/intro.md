@@ -1,6 +1,6 @@
 # Introduction to Numerical Methods for Engineers
 
-This is a summary of the lecture notes and exercises for the course *Numerische Methoden* at the *University of Augsburg*. 
+This is a summary of the lecture notes and exercises for the course **Ingenieurwissenschaftliche Grundlagen 3 (Numerische Methoden)** at the **University of Augsburg**. 
 
 ## Content
 
